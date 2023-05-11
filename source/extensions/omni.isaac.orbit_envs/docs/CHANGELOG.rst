@@ -115,3 +115,5 @@ Added
   * ``Isaac-Reach-Franka-v0``: A end-effector pose tracking task for the Franka arm.
   * ``Isaac-Lift-Franka-v0``: A 3D object lift and reposing task for the Franka arm.
   * ``Isaac-Velocity-Anymal-C-v0``: An SE(2) velocity tracking task for legged robot on flat terrain.
+  * ``SafeRL-Reach-Franka-v0``: A end-effector pose tracking task for the Franka arm for SafeRL tests.
+  * ``SafeRL-Lift-Franka-v0``: A 3D object lift and reposing task for the Franka arm for SafeRL tests.

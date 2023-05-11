@@ -92,3 +92,19 @@ gym.register(
     entry_point="omni.isaac.orbit_envs.manipulation.lift:LiftEnv",
     kwargs={"cfg_entry_point": "omni.isaac.orbit_envs.manipulation.lift:LiftEnvCfg"},
 )
+
+##
+# saferl
+##
+
+gym.register(
+    id="SafeRL-Reach-Franka-v0",
+    entry_point="omni.isaac.orbit_envs.saferl.reach:ReachEnv",
+    kwargs={"cfg_entry_point": "omni.isaac.orbit_envs.saferl.reach:ReachEnvCfg"},
+)
+
+gym.register(
+    id="SafeRL-Lift-Franka-v0",
+    entry_point="omni.isaac.orbit_envs.saferl.lift:LiftEnv",
+    kwargs={"cfg_entry_point": "omni.isaac.orbit_envs.saferl.lift:LiftEnvCfg"},
+)

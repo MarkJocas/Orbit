@@ -22,6 +22,9 @@ RSLRL_PPO_CONFIG_FILE = {
     "Isaac-Reach-Franka-v0": os.path.join(ORBIT_ENVS_DATA_DIR, "rsl_rl/reach_ppo.yaml"),
     # locomotion
     "Isaac-Velocity-Anymal-C-v0": os.path.join(ORBIT_ENVS_DATA_DIR, "rsl_rl/anymal_ppo.yaml"),
+    # saferl
+    "SafeRL-Lift-Franka-v0": os.path.join(ORBIT_ENVS_DATA_DIR, "rsl_rl/safe_lift_ppo.yaml"),
+    "SafeRL-Reach-Franka-v0": os.path.join(ORBIT_ENVS_DATA_DIR, "rsl_rl/safe_reach_ppo.yaml"),
 }
 """Mapping from environment names to PPO agent files."""
 

@@ -47,3 +47,5 @@ source/extensions/omni.isaac.orbit_assets
 # RL-Games
 **/runs/*
 **/logs/*
+
+.vscode/tools/settings.json

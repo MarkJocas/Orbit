@@ -177,7 +177,7 @@ update_vscode_settings() {
 
 # print the usage description
 print_help () {
-    echo -e "\nusage: $(basename "$0") [-h] [-i] [-e] [-f] [-p] [-s] [-v] [-d] [-c] -- Utility to manage extensions in Orbit."
+    echo -e "\nusage: $(basename "$0") [-h] [-i] [-e] [-f] [-p] [-s] [-v] [-d] [-c] [-t] [-r] -- Utility to manage extensions in Orbit."
     echo -e "\noptional arguments:"
     echo -e "\t-h, --help           Display the help content."
     echo -e "\t-i, --install        Install the extensions inside Isaac Orbit."
@@ -188,6 +188,8 @@ print_help () {
     echo -e "\t-v, --vscode         Generate the VSCode settings file from template."
     echo -e "\t-d, --docs           Build the documentation from source using sphinx."
     echo -e "\t-c, --conda [NAME]   Create the conda environment for Orbit. Default name is 'orbit'."
+    echo -e "\t-t, --train          Train RL model with workflows provided by Isaac Sim."
+    echo -e "\t-r, --run            Run trained RL model with workflows provided by Isaac Sim."
     echo -e "\n" >&2
 }
 
@@ -315,6 +317,24 @@ while [[ $# -gt 0 ]]; do
             # exit neatly
             break
             ;;
+        -t|--train)
+            # run the python provided by isaacsim
+            python_exe=$(extract_python_exe)
+            echo "[INFO] Using python from: ${python_exe}"
+            shift # past argument
+            ${python_exe} $@
+            # exit neatly
+            break
+            ;;
+        -r|--run)
+            # run the python provided by isaacsim
+            python_exe=$(extract_python_exe)
+            echo "[INFO] Using python from: ${python_exe}"
+            shift # past argument
+            ${python_exe} $@
+            # exit neatly
+            break
+            ;;
         -h|--help)
             print_help
             exit 1
@@ -326,3 +346,5 @@ while [[ $# -gt 0 ]]; do
             ;;
     esac
 done
+
+# https://isaac-orbit.github.io/orbit/source/setup/sample.html
