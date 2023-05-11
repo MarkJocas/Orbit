@@ -52,8 +52,8 @@ class RandomizationCfg:
         orientation_cat: str = "uniform"  # randomize position: "default", "uniform"
         # randomize position
         position_default = [0.5, 0.0, 0.5]  # position default (x,y,z)
-        position_uniform_min = [0.25, -0.25, 0.25]  # position (x,y,z)
-        position_uniform_max = [0.5, 0.25, 0.5]  # position (x,y,z)
+        position_uniform_min = [0.25, -0.25, 0.0]  # position (x,y,z)
+        position_uniform_max = [0.5, 0.25, 0.25]  # position (x,y,z)
         # randomize orientation
         orientation_default = [1.0, 0.0, 0.0, 0.0]  # orientation default
 
@@ -108,7 +108,7 @@ class ControlCfg:
     """Processing of MDP actions."""
 
     # action space
-    control_type = "default"  # "default", "inverse_kinematics"
+    control_type = "inverse_kinematics"  # "default", "inverse_kinematics"
     # decimation: Number of control action updates @ sim dt per policy dt
     decimation = 2
 

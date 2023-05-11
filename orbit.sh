@@ -387,7 +387,7 @@ while [[ $# -gt 0 ]]; do
                 exit 1
             fi
 
-            ${python_exe} source/standalone/workflows/rl_games/play.py --num_envs 1 --checkpoint $latest_nn_dir/nn/reach.pth $@
+            ${python_exe} source/standalone/workflows/rl_games/play.py --num_envs 1 --checkpoint $checkpoint_path $@
             # exit neatly
             break
             ;;
