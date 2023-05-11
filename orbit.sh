@@ -177,7 +177,7 @@ update_vscode_settings() {
 
 # print the usage description
 print_help () {
-    echo -e "\nusage: $(basename "$0") [-h] [-i] [-e] [-f] [-p] [-s] [-v] [-d] [-c] [-t] [-r] -- Utility to manage extensions in Orbit."
+    echo -e "\nusage: $(basename "$0") [-h] [-i] [-e] [-f] [-p] [-s] [-v] [-d] [-c] -- Utility to manage extensions in Orbit."
     echo -e "\noptional arguments:"
     echo -e "\t-h, --help           Display the help content."
     echo -e "\t-i, --install        Install the extensions inside Isaac Orbit."
@@ -188,8 +188,10 @@ print_help () {
     echo -e "\t-v, --vscode         Generate the VSCode settings file from template."
     echo -e "\t-d, --docs           Build the documentation from source using sphinx."
     echo -e "\t-c, --conda [NAME]   Create the conda environment for Orbit. Default name is 'orbit'."
-    echo -e "\t-t, --train          Train RL model with workflows provided by Isaac Sim."
-    echo -e "\t-r, --run            Run trained RL model with workflows provided by Isaac Sim."
+    echo -e "\t    --list           List environments available for SafeRL experiments."
+    echo -e "\t    --train          Train RL model with workflows provided by Isaac Sim. E.g.: ./orbit.sh --train --task SafeRL-Reach-Franka-v0"
+    echo -e "\t    --run            Run trained RL model with workflows provided by Isaac Sim. E.g.: ./orbit.sh --run --task SafeRL-Reach-Franka-v0 --num_envs 2"
+    echo -e "\t    --view           View environment for SafeRL experiments. E.g.: ./orbit.sh --view --task SafeRL-Reach-Franka-v0 --num_envs 2"
     echo -e "\n" >&2
 }
 
@@ -204,6 +206,18 @@ if [ -z "$*" ]; then
     print_help
     exit 1
 fi
+
+# extract arg values
+for argument in "$@"
+do
+    key=$value
+    value=$argument
+
+    if [[ $key == *"--"* ]]; then
+        v="${key/--/}"
+        declare $v="${value}" 
+   fi
+done
 
 # pass the arguments
 while [[ $# -gt 0 ]]; do
@@ -317,21 +331,63 @@ while [[ $# -gt 0 ]]; do
             # exit neatly
             break
             ;;
-        -t|--train)
+        --list)
             # run the python provided by isaacsim
             python_exe=$(extract_python_exe)
             echo "[INFO] Using python from: ${python_exe}"
             shift # past argument
-            ${python_exe} $@
+            ${python_exe} source/standalone/environments/list_envs.py
             # exit neatly
             break
             ;;
-        -r|--run)
+        --view)
             # run the python provided by isaacsim
             python_exe=$(extract_python_exe)
             echo "[INFO] Using python from: ${python_exe}"
             shift # past argument
-            ${python_exe} $@
+            ${python_exe} source/standalone/saferl/random_safe_agent.py $@
+            # exit neatly
+            break
+            ;;
+        --train)
+            # run the python provided by isaacsim
+            python_exe=$(extract_python_exe)
+            echo "[INFO] Using python from: ${python_exe}"
+            shift # past argument
+            ${python_exe} source/standalone/workflows/rl_games/train.py --headless $@
+            # exit neatly
+            break
+            ;;
+        --run)
+            # run the python provided by isaacsim
+            python_exe=$(extract_python_exe)
+            echo "[INFO] Using python from: ${python_exe}"
+            shift # past argument
+
+            if [ -z $task ]; then
+                echo "[Error] No --task argument provided." >&2;
+                exit 1
+            fi
+
+            # get task keyword from task specified
+            case $task in
+                *Lift-Franka* ) task_short="lift";;
+                *Reach-Franka* ) task_short="reach";;
+                * ) echo "[Error] Failed to understand --task argument for '${task}'" >&2 && exit 1;;
+            esac
+
+            latest_nn_dir=$(ls -td logs/rl_games/${task_short}/*/ | head -n1)
+            checkpoint_path=${latest_nn_dir}nn/${task_short}.pth
+
+            # validate expected model path for task
+            if [[ -f "$checkpoint_path" ]]; then
+                echo "[INFO] Loading model for '$task' task from: ${checkpoint_path}"
+            else
+                echo "[Error] Expected checkpoint path for '$task' does not exist: ${checkpoint_path}" >&2;
+                exit 1
+            fi
+
+            ${python_exe} source/standalone/workflows/rl_games/play.py --num_envs 1 --checkpoint $latest_nn_dir/nn/reach.pth $@
             # exit neatly
             break
             ;;
